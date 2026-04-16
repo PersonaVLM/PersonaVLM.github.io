@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="PersonaVLM: Long-Term Personalized Multimodal LLMs. Accepted to CVPR 2026.">
+  <meta name="keywords" content="PersonaVLM, Persona-MME, MLLM, Long-term Memory, Personalized Agent, CVPR 2026">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PersonaVLM: Long-Term Personalized Multimodal LLMs</title>
+
+  <!-- Google Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/avatar.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      --text-dark: #1d1d1f;
+      --text-grey: #6e6e73;
+      --bg-sub: #fbfbfd;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #ffffff;
+      color: var(--text-dark);
+      scroll-behavior: smooth;
+    }
+
+    /* Video-MME Style Navbar */
+    .nav-v2 {
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(15px);
+      border-bottom: 1px solid #f1f1f4;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+    .nav-v2 a {
+      color: var(--text-grey);
+      font-weight: 500;
+      padding: 6px 16px;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+    .nav-v2 a:hover { color: #6366f1; background: #f5f5f7; }
+    .nav-v2 a.active { background: #f0f0f5; color: var(--text-dark); }
+
+    /* Hero Section */
+    .hero-v2 { padding: 4rem 0 3rem 0; text-align: center; }
+    .publication-title-v2 {
+      font-weight: 800;
+      font-size: 5.5rem !important;
+      background: linear-gradient(to right, #2d3436 20%, #6c5ce7 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem !important;
+      letter-spacing: -3px;
+    }
+    .v2-tag {
+      font-size: 1.5rem;
+      background: #eef2ff;
+      color: #6366f1;
+      padding: 4px 14px;
+      border-radius: 10px;
+      margin-left: 10px;
+      font-weight: 700;
+      vertical-align: middle;
+    }
+
+    /* Buttons Style */
+    .btn-row { display: flex; justify-content: center; gap: 1rem; margin: 3rem 0; flex-wrap: wrap; }
+    .btn-main {
+      background: var(--primary-gradient) !important;
+      border: none !important;
+      color: white !important;
+      padding: 1.5rem 2.2rem !important;
+      border-radius: 14px !important;
+      font-weight: 600 !important;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+      transition: transform 0.2s;
+    }
+    .btn-main:hover { transform: translateY(-2px); color: white !important; }
+    .btn-sec {
+      background: white !important;
+      border: 1px solid #e2e8f0 !important;
+      padding: 1.5rem 2.2rem !important;
+      border-radius: 14px !important;
+      font-weight: 600 !important;
+      transition: all 0.2s;
+    }
+    .btn-sec:hover { background: #f8fafc !important; border-color: #cbd5e1 !important; transform: translateY(-2px); }
+
+    /* Content Styling */
+    .section-v2 { padding: 4rem 0; }
+    .title-line {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .title-line::before {
+      content: "";
+      width: 5px;
+      height: 35px;
+      background: var(--primary-gradient);
+      border-radius: 10px;
+    }
+
+    .img-card {
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+      border: 1px solid #f0f0f2;
+      overflow: hidden;
+      margin: 2rem 0;
+    }
+    .caption {
+      padding: 1.2rem;
+      background: #fafafa;
+      border-top: 1px solid #f0f0f0;
+      color: var(--text-grey);
+      font-size: 0.95rem;
+    }
+
+    .author-block-v2 a { color: #4338ca; font-weight: 500; }
+    .author-block-v2 a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<nav class="nav-v2">
+  <a href="#" class="active">Home</a>
+  <a href="#intro">Introduction</a>
+  <a href="#framework">Framework</a>
+  <a href="#playground">Playground</a>
+  <a href="#benchmark">Benchmark</a>
+</nav>
+
+<section class="hero-v2">
+  <div class="container is-max-desktop">
+    <h1 class="publication-title-v2">
+      <img src="./static/images/avatar.png" style="height: 2.0em; vertical-align: middle; margin-right: 0.2em;">
+      PersonaVLM
+    </h1>
+    <h2 class="title is-3" style="color: var(--text-grey); font-weight: 400; letter-spacing: -0.5px;">
+      Long-Term Personalized Multimodal LLMs
+    </h2>
+
+    <!-- Authors fully restored -->
+    <div class="is-size-5 author-block-v2" style="margin-top: 2rem;">
+      <span><a href="https://PersonaVLM.github.io">Chang Nie</a><sup>1</sup>,</span>
+      <span><a href="https://scholar.google.com/citations?user=4A1xYQwAAAAJ&hl=zh-CN">Chaoyou Fu</a><sup>1*</sup>,</span>
+      <span><a href="https://yfzhang114.github.io/">Yifan Zhang</a><sup>2</sup>,</span>
+      <span><a href="https://scholar.google.com/citations?user=V2b2PzUAAAAJ&hl=zh-CN">Haihua Yang</a><sup>2†</sup>,</span>
+      <span><a href="https://scholar.google.com/citations?user=fIXA_SsAAAAJ&hl=en">Caifeng Shan</a><sup>1</sup></span>
+    </div>
+    <div class="is-size-5" style="color: var(--text-grey); margin-top: 10px;">
+      <span><sup>1</sup>Nanjing University, &nbsp; <sup>2</sup>ByteDance</span>
+    </div>
+    <div class="is-size-6" style="color: #94a3b8; margin-top: 10px;">
+      * Corresponding author &nbsp;&nbsp; † Project leader
+    </div>
+
+    <!-- Links restored -->
+    <div class="btn-row">
+      <a href="https://github.com/MiG-NJU/PersonaVLM" class="button btn-main">
+        <span class="icon"><i class="fab fa-github"></i></span><span>GitHub</span>
+      </a>
+      <a href="https://huggingface.co/ClareNie/PersonaVLM" class="button btn-sec">
+        <span class="icon">🤗</span><span>Model</span>
+      </a>
+      <a href="http://arxiv.org/abs/2604.13074" class="button btn-sec">
+        <span class="icon"><i class="ai ai-arxiv"></i></span><span>Paper</span>
+      </a>
+      <a href="https://huggingface.co/datasets/ClareNie/Persona-MME" class="button btn-sec">
+        <span class="icon">📊</span>
+        <span>Benchmark</span>
+      </a>
+      <a href="https://huggingface.co/datasets/ClareNie/PersonaVLM-Dataset" class="button btn-sec">
+        <span class="icon">🖼️</span>
+        <span>Dataset</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 1. Introduction -->
+<section class="section-v2" id="intro">
+  <div class="container is-max-desktop">
+    <h2 class="title-line">Introduction</h2>
+    <div class="content is-size-5 has-text-justified" style="color: #334155; line-height: 1.7;">
+      <p>
+        General-purpose Multimodal Large Language Models (MLLMs) increasingly serve as daily assistants, yet their ability to provide long-term personalized experiences remains limited. Current strategies are primarily designed for static interactions, failing to capture users' <b>evolving preferences</b> and <b>shifting personalities</b> over time. In this work, we identify two foundational pillars for effective long-term personalization: 
+        (i) <strong>Personalized Memory Architecture</strong>; 
+        (ii) <strong>Response Alignment</strong>.
+      </p>
+    </div>
+    <div class="img-card">
+      <img src="./static/images/teaser.png" style="width: 100%;">
+      <div class="caption has-text-centered">
+        <strong>PersonaVLM</strong> proactively remembers preference shifts and generates aligned responses.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. Framework -->
+<section class="section-v2" id="framework" style="background: var(--bg-sub);">
+  <div class="container is-max-desktop">
+    <h2 class="title-line">The PersonaVLM Framework</h2>
+    <div class="img-card">
+      <img src="./static/images/framework.png" style="width: 100%; background: white;">
+    </div>
+    <div class="content is-size-5 has-text-justified mt-4">
+      <p>
+        Our framework transforms a general MLLM into a personalized assistant through a two-stage process: <b>Response Stage</b> (multi-step reasoning and retrieval) and <b>Update Stage</b> (integrating proactive memorization and personality evolving). To support training, we develop a data synthesis pipeline to produce <b>84k training samples</b>, comprising <b>78k samples</b> for SFT and <b>6k samples</b> for RL.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Playground / Demo -->
+<section class="section-v2" id="playground">
+  <div class="container is-max-desktop">
+    <h2 class="title-line">Interactive Playground</h2>
+    <div class="content is-size-5">
+      <p>Monitor the agent's internal R3-capabilities: <b>Remembering</b>, <b>Reasoning</b>, and <b>Alignment</b>.</p>
+    </div>
+    <div class="img-card">
+      <img src="./static/images/demo.png" style="width: 100%;">
+      <div class="caption">The demo interface highlights the "R3" process during personalized response generation.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. Benchmark -->
+<section class="section-v2" id="benchmark" style="background: var(--bg-sub);">
+  <div class="container is-max-desktop">
+    <h2 class="title-line">Persona-MME Benchmark & Leaderboard</h2>
+    <div class="content is-size-5 mb-5">
+      <p><strong>Persona-MME</strong> covers 2,000 cases across 14 fine-grained tasks to evaluate long-term personalization.</p>
+    </div>
+    
+    <div class="columns is-vcentered">
+      <div class="column is-5">
+        <img src="./static/images/bench.png" class="img-card" style="margin: 0;">
+      </div>
+      <div class="column is-8">
+        <img src="./static/images/leaderboard.png" class="img-card" style="margin: 0;">
+      </div>
+    </div>
+
+    <div class="mt-6">
+      <h3 class="title is-4">Main Experimental Results</h3>
+      <img src="./static/images/result.png" class="img-card">
+      <img src="./static/images/result2.png" class="img-card">
+      <p class="is-size-6 has-text-grey">PersonaVLM significantly outperforms GPT-4o and other state-of-the-art MLLMs on Persona-MME and PERSONAMEM.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Qualitative Examples -->
+<section class="section-v2">
+  <div class="container is-max-desktop">
+    <h2 class="title-line">Qualitative Examples</h2>
+    <div class="img-card">
+      <img src="./static/images/examples.png" style="width: 100%;">
+      <p class="is-size-6 has-text-grey">Case studies demonstrate PersonaVLM's superior capabilities in memory recall, context integration, and personality alignment compared to baselines.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Citation -->
+<section class="section-v2" id="BibTeX">
+  <div class="container is-max-desktop">
+    <h2 class="title is-4">Citation</h2>
+    <pre style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 2rem;"><code>@inproceedings{nie2026personavlm,
+  title={PersonaVLM: Long-Term Personalized Multimodal LLMs},
+  author={Nie, Chang and Fu, Chaoyou and Zhang, Yifan and Yang, Haihua and Shan, Caifeng},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year={2026},
+  url={http://arxiv.org/abs/2604.13074}
+}</code></pre>
+  </div>
+</section>
+
+<footer class="footer" style="background: white; border-top: 1px solid #f1f1f4; padding: 3rem 1rem;">
+  <div class="container has-text-centered">
+    <p style="color: var(--text-grey); font-size: 0.9rem;">
+      © 2026 PersonaVLM Project. This website is adapted from the Nerfies template.
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
